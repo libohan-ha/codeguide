@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>样式测试</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #3b82f6 0%, #a21caf 100%);
+            color: white;
+            min-height: 100vh;
+        }
+        .test-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+        }
+        .gradient-text {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ffa726 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-size: 2rem;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-card">
+        <h1 class="gradient-text">样式测试页面</h1>
+        <p>如果您能看到这些样式效果，说明浏览器支持CSS：</p>
+        <ul>
+            <li>渐变背景</li>
+            <li>毛玻璃效果</li>
+            <li>渐变文字</li>
+            <li>阴影效果</li>
+        </ul>
+    </div>
+    <div class="test-card">
+        <h2>主要功能测试</h2>
+        <p>这是一个测试页面，用于验证CSS样式是否正确加载。</p>
+        <p>如果样式显示正常，请尝试以下操作：</p>
+        <ol>
+            <li>清除浏览器缓存</li>
+            <li>刷新页面</li>
+            <li>检查网络连接</li>
+            <li>检查开发者工具中的错误</li>
+        </ol>
+    </div>
+</body>
+</html>
