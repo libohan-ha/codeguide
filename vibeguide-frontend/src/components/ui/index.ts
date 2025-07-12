@@ -10,6 +10,7 @@ export { default as LoadingSpinner } from './LoadingSpinner'
 export { default as ModernButton } from './ModernButton'
 export { default as ModernCard } from './ModernCard'
 export { default as ModernInput } from './ModernInput'
+export { default as SampleModal } from './SampleModal'
 
 // 全局组件
 export { default as NotificationCenter } from './NotificationCenter'

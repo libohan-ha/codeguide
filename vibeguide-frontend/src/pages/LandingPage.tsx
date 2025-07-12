@@ -9,11 +9,14 @@ import {
   MagneticButton,
   ElasticScale,
   RippleEffect,
+  SampleModal,
   useBreakpoint
 } from '@/components/ui'
 import { useInViewAnimation, useHoverAnimation, useSequenceAnimation } from '@/hooks/useAnimations'
 
 export default function LandingPage() {
+  const [showSampleModal, setShowSampleModal] = React.useState(false)
+  
   const features = [
     {
       icon: FileText,
@@ -120,6 +123,7 @@ export default function LandingPage() {
                 size={isMobile ? 'lg' : 'xl'}
                 variant="glass"
                 className="text-xl px-8 py-4"
+                onClick={() => setShowSampleModal(true)}
               >
                 查看示例
                 <ArrowRight className="w-5 h-5 ml-2" />
@@ -254,6 +258,12 @@ export default function LandingPage() {
           </RippleEffect>
         </div>
       </div>
+      
+      {/* Sample Modal */}
+      <SampleModal 
+        isOpen={showSampleModal} 
+        onClose={() => setShowSampleModal(false)} 
+      />
     </ResponsiveContainer>
   )
 }
