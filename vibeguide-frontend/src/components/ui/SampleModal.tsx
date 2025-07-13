@@ -1,4 +1,3 @@
-import React from 'react'
 import { Link } from 'react-router-dom'
 import { X, FileText, Users, Code, Database, Smartphone, Globe } from 'lucide-react'
 import { ModernButton, ModernCard } from '@/components/ui'

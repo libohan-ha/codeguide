@@ -9,8 +9,9 @@ export interface ProjectData {
     id: string
     question: string
     answer: string
-    type: 'text' | 'choice' | 'number'
+    type: 'text' | 'multiple_choice' | 'rating'
     options?: string[]
+    required: boolean
   }>
   documents: {
     userJourney: string

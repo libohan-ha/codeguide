@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { lazy, Suspense } from 'react'
 import { Link } from 'react-router-dom'
 import { ArrowRight, FileText, Zap, Users, Sparkles, Rocket } from 'lucide-react'
 import { 
@@ -9,10 +9,13 @@ import {
   MagneticButton,
   ElasticScale,
   RippleEffect,
-  SampleModal,
+  LoadingSpinner,
   useBreakpoint
 } from '@/components/ui'
 import { useInViewAnimation, useHoverAnimation, useSequenceAnimation } from '@/hooks/useAnimations'
+
+// 懒加载大型模态框组件
+const SampleModal = lazy(() => import('@/components/ui/SampleModal'))
 
 export default function LandingPage() {
   const [showSampleModal, setShowSampleModal] = React.useState(false)
@@ -259,11 +262,19 @@ export default function LandingPage() {
         </div>
       </div>
       
-      {/* Sample Modal */}
-      <SampleModal 
-        isOpen={showSampleModal} 
-        onClose={() => setShowSampleModal(false)} 
-      />
+      {/* Sample Modal - 懒加载 */}
+      {showSampleModal && (
+        <Suspense fallback={
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+            <LoadingSpinner size="lg" />
+          </div>
+        }>
+          <SampleModal 
+            isOpen={showSampleModal} 
+            onClose={() => setShowSampleModal(false)} 
+          />
+        </Suspense>
+      )}
     </ResponsiveContainer>
   )
 }

@@ -6,8 +6,14 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "build:analyze": "ANALYZE=true npm run build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write \"src/**/*.{ts,tsx,js,jsx,json,css,md}\"",
+    "format:check": "prettier --check \"src/**/*.{ts,tsx,js,jsx,json,css,md}\"",
+    "preview": "vite preview",
+    "type-check": "tsc -b --noEmit",
+    "quality": "npm run type-check && npm run lint && npm run format:check"
   },
   "dependencies": {
     "clsx": "^2.1.1",
@@ -37,9 +43,12 @@
     "eslint-plugin-react-refresh": "^0.4.20",
     "globals": "^16.3.0",
     "postcss": "^8.5.6",
+    "prettier": "^3.6.2",
+    "rollup-plugin-visualizer": "^6.0.3",
     "tailwindcss": "^3.4.17",
     "typescript": "~5.8.3",
     "typescript-eslint": "^8.35.1",
-    "vite": "^7.0.4"
+    "vite": "^7.0.4",
+    "vite-plugin-bundle-analyzer": "^0.0.1"
   }
 }

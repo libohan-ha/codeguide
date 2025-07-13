@@ -1,21 +1,35 @@
 import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom'
-import LandingPage from '@/pages/LandingPage'
-import CreateProject from '@/pages/CreateProject'
-import StepperDemo from '@/pages/StepperDemo'
+import { lazy, Suspense, useState } from 'react'
 import MainLayout from '@/components/layout/MainLayout'
 import { 
   NotificationCenter, 
   GlobalLoader, 
   RouteTransition,
   ParticleBackground,
-  FloatingActionButton
+  FloatingActionButton,
+  LoadingSpinner
 } from '@/components/ui'
+import PerformancePanel from '@/components/dev/PerformancePanel'
 import { Plus } from 'lucide-react'
 import { useAppStore } from '@/store'
+import { ENV } from '@/constants'
+
+// 懒加载页面组件
+const LandingPage = lazy(() => import('@/pages/LandingPage'))
+const CreateProject = lazy(() => import('@/pages/CreateProject'))
+const StepperDemo = lazy(() => import('@/pages/StepperDemo'))
+
+// 通用加载组件
+const PageLoader = () => (
+  <div className="flex items-center justify-center min-h-screen">
+    <LoadingSpinner size="lg" />
+  </div>
+)
 
 function AppContent() {
   const navigate = useNavigate()
   const setCurrentProject = useAppStore(state => state.setCurrentProject)
+  const [showPerformancePanel, setShowPerformancePanel] = useState(false)
 
   const handleCreateNewProject = () => {
     setCurrentProject(null)
@@ -38,15 +52,21 @@ function AppContent() {
           <Routes>
             <Route path="/" element={
               <MainLayout>
-                <LandingPage />
+                <Suspense fallback={<PageLoader />}>
+                  <LandingPage />
+                </Suspense>
               </MainLayout>
             } />
             <Route path="/create" element={
-              <CreateProject />
+              <Suspense fallback={<PageLoader />}>
+                <CreateProject />
+              </Suspense>
             } />
             <Route path="/stepper-demo" element={
               <MainLayout>
-                <StepperDemo />
+                <Suspense fallback={<PageLoader />}>
+                  <StepperDemo />
+                </Suspense>
               </MainLayout>
             } />
           </Routes>
@@ -65,6 +85,14 @@ function AppContent() {
       >
         <Plus className="w-6 h-6" />
       </FloatingActionButton>
+
+      {/* 性能监控面板 - 仅开发环境 */}
+      {ENV.IS_DEV && (
+        <PerformancePanel
+          isVisible={showPerformancePanel}
+          onToggle={() => setShowPerformancePanel(!showPerformancePanel)}
+        />
+      )}
     </div>
   )
 }

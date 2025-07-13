@@ -1,9 +1,9 @@
-import { Link, useLocation, useNavigate } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { useState, useEffect } from 'react'
-import { Menu, X, ChevronRight } from 'lucide-react'
+import { Menu, X } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { useBreakpoint } from '@/components/ui/ResponsiveContainer'
-import { MagneticButton, ElasticScale } from '@/components/ui/MicroInteractions'
+import { ElasticScale } from '@/components/ui/MicroInteractions'
 import { useScrollAnimation } from '@/hooks/useAnimations'
 
 interface NavItem {
@@ -17,11 +17,9 @@ const navItems: NavItem[] = [
 
 export default function Navbar() {
   const location = useLocation()
-  const navigate = useNavigate()
   const { isMobile } = useBreakpoint()
   const { scrollDirection, isScrolling } = useScrollAnimation()
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
-  const [hoveredItem, setHoveredItem] = useState<string | null>(null)
 
   // 当路由改变时关闭移动菜单
   useEffect(() => {
@@ -31,7 +29,7 @@ export default function Navbar() {
   // 桌面导航
   const DesktopNav = () => (
     <nav className="hidden md:flex items-center space-x-2">
-      {navItems.map((item, index) => {
+      {navItems.map((item) => {
         const isActive = location.pathname === item.href
         
         return (

@@ -36,6 +36,7 @@ interface AppState {
     documents: string | null
     aiGeneration: string | null
     network: string | null
+    saving: string | null
   }
 }
 
@@ -107,6 +108,7 @@ export const useAppStore = create<AppStore>()(
           documents: null,
           aiGeneration: null,
           network: null,
+          saving: null,
         },
 
         // 项目操作

@@ -1,4 +1,4 @@
-import { type ReactNode, forwardRef } from 'react'
+import { type ReactNode, forwardRef, memo, useMemo } from 'react'
 import { cn } from '@/lib/utils'
 
 export interface ModernCardProps {
@@ -14,7 +14,35 @@ export interface ModernCardProps {
   onClick?: () => void
 }
 
-const ModernCard = forwardRef<HTMLDivElement, ModernCardProps>(
+// 优化：将静态类映射移出组件以避免重复创建
+const sizeClasses = {
+  sm: 'p-4',
+  md: 'p-6',
+  lg: 'p-8',
+  xl: 'p-10'
+} as const
+
+const shadowClasses = {
+  none: 'shadow-none',
+  sm: 'shadow-sm',
+  md: 'shadow-md',
+  lg: 'shadow-lg',
+  xl: 'shadow-xl',
+  apple: 'shadow-apple',
+  float: 'shadow-float'
+} as const
+
+const roundedClasses = {
+  none: 'rounded-none',
+  sm: 'rounded-sm',
+  md: 'rounded-md',
+  lg: 'rounded-lg',
+  xl: 'rounded-xl',
+  '2xl': 'rounded-2xl',
+  '3xl': 'rounded-3xl'
+} as const
+
+const ModernCard = memo(forwardRef<HTMLDivElement, ModernCardProps>(
   ({
     children,
     variant = 'default',
@@ -28,7 +56,8 @@ const ModernCard = forwardRef<HTMLDivElement, ModernCardProps>(
     onClick,
     ...props
   }, ref) => {
-    const baseClasses = cn(
+    // 缓存基础类计算
+    const baseClasses = useMemo(() => cn(
       'relative overflow-hidden',
       'transition-all duration-300 ease-apple',
       'transform-gpu',
@@ -40,69 +69,57 @@ const ModernCard = forwardRef<HTMLDivElement, ModernCardProps>(
       
       // 发光效果
       glow && 'hover:shadow-glow'
-    )
+    ), [onClick, hover, glow])
 
-    const sizeClasses = {
-      sm: 'p-4',
-      md: 'p-6',
-      lg: 'p-8',
-      xl: 'p-10'
-    }
+    // 缓存变体类计算
+    const variantClasses = useMemo(() => {
+      const variants = {
+        default: cn(
+          'bg-white',
+          border && 'border border-gray-200',
+          'backdrop-blur-sm'
+        ),
+        
+        glass: cn(
+          'glass',
+          'text-gray-800',
+          !border && 'border-0'
+        ),
+        
+        gradient: cn(
+          'bg-gradient-glass',
+          'text-gray-800',
+          border && 'border border-white/20'
+        ),
+        
+        floating: cn(
+          'bg-white',
+          border && 'border border-gray-200',
+          'animate-floating'
+        ),
+        
+        interactive: cn(
+          'bg-white',
+          border && 'border border-gray-200',
+          'hover:bg-gradient-glass',
+          'hover:border-white/30'
+        )
+      }
+      return variants[variant]
+    }, [variant, border])
 
-    const shadowClasses = {
-      none: 'shadow-none',
-      sm: 'shadow-sm',
-      md: 'shadow-md',
-      lg: 'shadow-lg',
-      xl: 'shadow-xl',
-      apple: 'shadow-apple',
-      float: 'shadow-float'
-    }
+    // 缓存最终类名计算
+    const finalClassName = useMemo(() => cn(
+      baseClasses,
+      sizeClasses[size],
+      shadowClasses[shadow],
+      roundedClasses[rounded],
+      variantClasses,
+      className
+    ), [baseClasses, size, shadow, rounded, variantClasses, className])
 
-    const roundedClasses = {
-      none: 'rounded-none',
-      sm: 'rounded-sm',
-      md: 'rounded-md',
-      lg: 'rounded-lg',
-      xl: 'rounded-xl',
-      '2xl': 'rounded-2xl',
-      '3xl': 'rounded-3xl'
-    }
-
-    const variantClasses = {
-      default: cn(
-        'bg-white',
-        border && 'border border-gray-200',
-        'backdrop-blur-sm'
-      ),
-      
-      glass: cn(
-        'glass',
-        'text-gray-800',
-        !border && 'border-0'
-      ),
-      
-      gradient: cn(
-        'bg-gradient-glass',
-        'text-gray-800',
-        border && 'border border-white/20'
-      ),
-      
-      floating: cn(
-        'bg-white',
-        border && 'border border-gray-200',
-        'animate-floating'
-      ),
-      
-      interactive: cn(
-        'bg-white',
-        border && 'border border-gray-200',
-        'hover:bg-gradient-glass',
-        'hover:border-white/30'
-      )
-    }
-
-    const cardContent = (
+    // 缓存卡片内容
+    const cardContent = useMemo(() => (
       <>
         {/* 微光效果 */}
         {(variant === 'gradient' || variant === 'interactive') && (
@@ -119,27 +136,20 @@ const ModernCard = forwardRef<HTMLDivElement, ModernCardProps>(
           {children}
         </div>
       </>
-    )
+    ), [variant, glow, children])
 
     return (
       <div
         ref={ref}
         onClick={onClick}
-        className={cn(
-          baseClasses,
-          sizeClasses[size],
-          shadowClasses[shadow],
-          roundedClasses[rounded],
-          variantClasses[variant],
-          className
-        )}
+        className={finalClassName}
         {...props}
       >
         {cardContent}
       </div>
     )
   }
-)
+))
 
 ModernCard.displayName = 'ModernCard'
 
